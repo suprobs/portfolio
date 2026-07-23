@@ -23,6 +23,7 @@ body { background: #000; overflow: hidden; height: 100vh; }
   z-index: 200; display: flex; align-items: center; justify-content: center;
   font-family: 'Press Start 2P', monospace;
   transition: opacity 0.4s;
+  overflow-y: auto; padding: 12px 0; -webkit-overflow-scrolling: touch;
 }
 #riddle-screen.glitch-out { animation: screenGlitch 0.6s ease-in forwards; }
 @keyframes screenGlitch {
@@ -43,41 +44,47 @@ body { background: #000; overflow: hidden; height: 100vh; }
   background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.75) 100%);
 }
 #terminal {
-  width: min(700px, 92vw);
+  width: min(700px, 94vw); margin: auto;
   border: 1px solid #00aa44; background: rgba(0,8,2,0.97);
   box-shadow: 0 0 40px rgba(0,200,80,0.15), inset 0 0 60px rgba(0,0,0,0.5);
-  position: relative; z-index: 1;
+  position: relative; z-index: 1; flex-shrink: 0;
 }
 #term-titlebar {
   background: #003311; border-bottom: 1px solid #00aa44;
   padding: 10px 14px; display: flex; justify-content: space-between; align-items: center;
 }
-#term-title { font-size: 8px; color: #00cc55; letter-spacing: 3px; }
+#term-title { font-size: clamp(5px, 1.5vw, 8px); color: #00cc55; letter-spacing: clamp(1px, 0.5vw, 3px); }
 .term-dots { display: flex; gap: 6px; }
 .term-dot { width: 10px; height: 10px; border-radius: 50%; border: 1px solid rgba(0,200,80,0.3); background: rgba(0,200,80,0.08); }
-#term-body { padding: 20px 24px 28px; min-height: 320px; color: #00cc55; font-size: 11px; line-height: 2; letter-spacing: 1px; }
+#term-body {
+  padding: clamp(12px, 2.5vw, 20px) clamp(12px, 3vw, 24px) clamp(16px, 3.5vw, 28px);
+  min-height: 0; color: #00cc55;
+  font-size: clamp(6.5px, 1.85vw, 11px); line-height: 2;
+  letter-spacing: clamp(0.3px, 0.2vw, 1px);
+}
 .boot-line { display: block; overflow: hidden; white-space: nowrap; }
 .boot-line.dim { color: #006622; } .boot-line.warn { color: #ffaa00; }
 .boot-line.error { color: #ff4444; } .boot-line.bright { color: #00ff88; }
 #riddle-block { margin-top: 16px; display: none; }
-.riddle-line { display: block; color: #aaffcc; font-size: 10px; line-height: 2; letter-spacing: 2px; }
-.riddle-line.accent { color: #00ff88; font-size: 12px; letter-spacing: 4px; }
+.riddle-line { display: block; color: #aaffcc; font-size: clamp(6px, 1.7vw, 10px); line-height: 2; letter-spacing: clamp(0.8px, 0.45vw, 2px); }
+.riddle-line.accent { color: #00ff88; font-size: clamp(7px, 2vw, 12px); letter-spacing: clamp(1.5px, 0.8vw, 4px); }
 .riddle-line.empty { height: 10px; display: block; }
 #input-block { margin-top: 18px; display: none; }
 #input-row { display: flex; align-items: center; gap: 6px; }
-.input-prompt { color: #00ff88; font-size: 11px; }
+.input-prompt { color: #00ff88; font-size: clamp(7px, 1.85vw, 11px); }
 #riddle-input {
   background: transparent; border: none; outline: none;
   color: #00ff88; font-family: 'Press Start 2P', monospace;
-  font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
-  caret-color: transparent; width: 200px;
+  font-size: clamp(8px, 1.85vw, 11px); letter-spacing: clamp(1px, 0.6vw, 3px);
+  text-transform: uppercase;
+  caret-color: transparent; flex: 1 1 auto; min-width: 60px; max-width: 200px;
 }
 .blink-cursor { display: inline-block; width: 10px; height: 14px; background: #00ff88; animation: cursorBlink 0.8s step-end infinite; }
 @keyframes cursorBlink { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
-#riddle-feedback { margin-top: 10px; font-size: 9px; min-height: 18px; letter-spacing: 2px; display: none; animation: fadeIn 0.2s ease; }
+#riddle-feedback { margin-top: 10px; font-size: clamp(6px, 1.5vw, 9px); min-height: 18px; letter-spacing: clamp(0.5px, 0.4vw, 2px); line-height: 1.8; display: none; animation: fadeIn 0.2s ease; }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 #riddle-feedback.error { color: #ff4444; } #riddle-feedback.hint { color: #ffaa00; } #riddle-feedback.success { color: #00ff88; }
-#hint-line { margin-top: 14px; font-size: 7px; color: #003311; letter-spacing: 1px; cursor: pointer; transition: color 0.2s; display: none; }
+#hint-line { margin-top: 14px; font-size: clamp(5px, 1.3vw, 7px); color: #003311; letter-spacing: 1px; cursor: pointer; transition: color 0.2s; display: none; }
 #hint-line:hover { color: #006622; }
 #hint-text { color: #006622; display: none; }
 .rco { position: absolute; width: 20px; height: 20px; pointer-events: none; }
@@ -439,13 +446,17 @@ canvas { display: block; }
 
 /* ── Landscape phones (short viewport) — the primary mobile target ── */
 @media (orientation: landscape) and (max-height: 500px) {
-  /* Riddle terminal */
-  #term-body { min-height: 0; padding: 12px 16px 16px; font-size: 9px; line-height: 1.7; }
-  #term-title { font-size: 6px; letter-spacing: 2px; }
-  .riddle-line { font-size: 8px; line-height: 1.6; }
-  .riddle-line.accent { font-size: 10px; }
-  #riddle-input { font-size: 9px; width: 150px; }
-  .input-prompt { font-size: 9px; }
+  /* Riddle terminal: keep it inside a very short viewport */
+  #term-body { font-size: clamp(6px, 1.15vw, 9px); line-height: 1.45; }
+  #term-titlebar { padding: 6px 12px; }
+  .riddle-line { font-size: clamp(6px, 1.05vw, 8px); line-height: 1.45; }
+  .riddle-line.accent { font-size: clamp(7px, 1.25vw, 9px); }
+  .riddle-line.empty { height: 4px; }
+  .input-prompt, #riddle-input { font-size: clamp(8px, 1.2vw, 9px); }
+  #riddle-feedback { font-size: clamp(6px, 1.05vw, 8px); min-height: 14px; margin-top: 8px; }
+  #riddle-block { margin-top: 8px; }
+  #input-block { margin-top: 10px; }
+  #hint-line { margin-top: 8px; }
 
   /* Portfolio chrome */
   #logo { font-size: 9px; top: 10px; left: 14px; }
@@ -479,19 +490,51 @@ canvas { display: block; }
   .pdesc, .pub-title { font-size: 15px; }
 }
 
-/* Portrait phones: nudge to rotate for the best experience */
+/* ── Rotate suggestion: shown ONCE after entering the portfolio, dismissible ── */
 #rotate-hint {
   position: fixed; inset: 0; z-index: 250; display: none;
-  background: #000; color: #55aaff;
-  align-items: center; justify-content: center; flex-direction: column; gap: 18px;
-  font-family: 'Press Start 2P', monospace; text-align: center; padding: 30px;
+  background: rgba(0,4,12,0.94); color: #55aaff;
+  align-items: center; justify-content: center; flex-direction: column; gap: 16px;
+  font-family: 'Press Start 2P', monospace; text-align: center; padding: 26px;
+  backdrop-filter: blur(4px);
 }
-#rotate-hint .rot-icon { font-size: 40px; animation: rotWiggle 2s ease-in-out infinite; }
-#rotate-hint .rot-txt { font-size: 10px; line-height: 2; letter-spacing: 2px; color: #66aadd; }
-#rotate-hint .rot-sub { font-size: 7px; color: #33557a; letter-spacing: 1px; }
+#rotate-hint.show { display: flex; animation: fadeIn 0.3s ease; }
+#rotate-hint .rot-icon { font-size: 38px; animation: rotWiggle 2.2s ease-in-out infinite; }
+#rotate-hint .rot-txt { font-size: clamp(8px, 2.6vw, 11px); line-height: 2; letter-spacing: 2px; color: #77bbee; }
+#rotate-hint .rot-sub { font-size: clamp(6px, 2vw, 8px); color: #33557a; letter-spacing: 1px; line-height: 1.9; max-width: 320px; }
+#rotate-dismiss {
+  margin-top: 6px; background: transparent; border: 1px solid #005599;
+  color: #4499cc; font-family: 'Press Start 2P', monospace;
+  font-size: clamp(6px, 2vw, 8px); letter-spacing: 1px;
+  padding: 12px 18px; cursor: pointer; transition: all 0.15s;
+}
+#rotate-dismiss:hover, #rotate-dismiss:focus-visible {
+  background: rgba(0,80,160,0.3); border-color: #0077cc; color: #66bbff; outline: none;
+}
 @keyframes rotWiggle { 0%,100% { transform: rotate(-12deg); } 50% { transform: rotate(78deg); } }
+@media (prefers-reduced-motion: reduce) {
+  #rotate-hint .rot-icon { animation: none; transform: rotate(78deg); }
+}
+
+/* ── Portrait phones: fully usable, just tighter ── */
 @media (orientation: portrait) and (max-width: 760px) {
-  #rotate-hint { display: flex; }
+  #popup { width: calc(100vw - 20px); }
+  #popup-body { max-height: 32vh; font-size: 17px; }
+  .pdesc, .pub-title { font-size: 16px; }
+  #section-banner { min-width: 0; }
+  #roster { bottom: 14px; }
+  #fight-btn { bottom: 100px; left: 12px; }
+  #psx-btn  { bottom: 100px; right: 12px; }
+  #drag-hint { bottom: 150px; }
+  #fight-hud { top: 14px; padding: 0 10px; }
+  #fight-hud.on { gap: 8px; }
+  #fight-vs { font-size: 10px; padding-top: 4px; }
+  .hp-name { font-size: 5px; margin-bottom: 4px; }
+  .hp-wrap { height: 12px; }
+  #fight-msg { font-size: 15px; }
+  #fight-select-banner { top: 74px; font-size: 8px; padding: 8px 12px; white-space: normal; text-align: center; }
+  #fight-controls { bottom: 14px; padding: 0 10px; font-size: 5px; gap: 8px; }
+  #fight-esc { top: 52px; right: 12px; }
 }
 
   </style>
@@ -527,11 +570,12 @@ canvas { display: block; }
     </div>
   </div>
 
-  <!-- ROTATE HINT (portrait phones) -->
+  <!-- ROTATE SUGGESTION (after unlocking, portrait phones only, dismissible) -->
   <div id="rotate-hint">
     <div class="rot-icon">&#128241;</div>
-    <div class="rot-txt">ROTATE YOUR<br>DEVICE</div>
-    <div class="rot-sub">LANDSCAPE MODE RECOMMENDED</div>
+    <div class="rot-txt">ROTATE FOR<br>THE FULL VIEW</div>
+    <div class="rot-sub">LANDSCAPE GIVES YOU THE WIDE STAGE AND ROOM FOR TWO-PLAYER FIGHTS</div>
+    <button id="rotate-dismiss" type="button">CONTINUE IN PORTRAIT</button>
   </div>
 
   <!-- PORTFOLIO -->
@@ -949,9 +993,18 @@ function showRiddle() {
     if (l.ms > last) last = l.ms;
   });
   setTimeout(function() {
-    document.getElementById('input-block').style.display = 'block';
+    var ib = document.getElementById('input-block');
+    ib.style.display = 'block';
     document.getElementById('hint-line').style.display = 'block';
-    document.getElementById('riddle-input').focus();
+    var inp = document.getElementById('riddle-input');
+    inp.focus();
+    /* short viewports: make sure the answer field is on screen and tappable */
+    try { ib.scrollIntoView({ block: 'center', behavior: 'smooth' }); } catch (err) { ib.scrollIntoView(false); }
+    inp.addEventListener('focus', function() {
+      setTimeout(function() {
+        try { ib.scrollIntoView({ block: 'center', behavior: 'smooth' }); } catch (err) { ib.scrollIntoView(false); }
+      }, 250);
+    });
   }, last + 600);
 }
 function showHint() {
@@ -989,6 +1042,33 @@ document.addEventListener('keydown', function(e) {
     if (e.key === 'h' || e.key === 'H') showHint();
   }
 });
+/* Tapping anywhere in the terminal focuses the answer field (mobile keyboards) */
+document.getElementById('terminal').addEventListener('click', function() {
+  if (riddleSolved) return;
+  var ib = document.getElementById('input-block');
+  if (ib.style.display === 'block') document.getElementById('riddle-input').focus();
+});
+
+/* Rotate suggestion — only after unlocking, only on portrait phones, dismissible */
+function maybeSuggestRotate() {
+  var hint = document.getElementById('rotate-hint');
+  var isPortraitPhone = window.matchMedia('(orientation: portrait) and (max-width: 760px)').matches;
+  if (!isPortraitPhone) return;
+  hint.classList.add('show');
+  document.getElementById('rotate-dismiss').focus();
+}
+document.getElementById('rotate-dismiss').addEventListener('click', function() {
+  document.getElementById('rotate-hint').classList.remove('show');
+});
+/* Rotating the device answers the suggestion by itself */
+window.addEventListener('resize', function() {
+  var hint = document.getElementById('rotate-hint');
+  if (hint.classList.contains('show') &&
+      !window.matchMedia('(orientation: portrait)').matches) {
+    hint.classList.remove('show');
+  }
+});
+
 function launchPortfolio() {
   var rs = document.getElementById('riddle-screen');
   rs.classList.add('glitch-out');
@@ -998,6 +1078,7 @@ function launchPortfolio() {
     rs.style.display = 'none';
     appEl.classList.add('fade-in');
     initPortfolio(PROJECTS_DATA, PUBLICATIONS_DATA);
+    setTimeout(maybeSuggestRotate, 1400);
   }, 600);
 }
 runBoot();
@@ -1087,6 +1168,27 @@ function initPortfolio(projectsData, publications) {
     var raw = (i - sel + N) % N;
     if (raw > N / 2) raw -= N;
     return raw;
+  }
+
+  /* ── Aspect-aware layout ──
+     Portrait viewports are far narrower than the carousel was designed for,
+     so widen the lens and pull the objects horizontally together.          */
+  var LAY = { spread: 1, fov: 55, camZ: 11 };
+  var P1_BOUNDS_BASE = { minX: -8, maxX: -1.2, minY: -1.4, maxY: 3.2 };
+  var P2_BOUNDS_BASE = { minX: 1.2, maxX: 8,   minY: -1.4, maxY: 3.2 };
+  function bnd(base) {
+    return { minX: base.minX * LAY.spread, maxX: base.maxX * LAY.spread,
+             minY: base.minY, maxY: base.maxY };
+  }
+  function computeLayout() {
+    var a = W() / H();
+    if      (a < 0.85) LAY = { spread: 0.48, fov: 72, camZ: 11 };  /* portrait phone */
+    else if (a < 1.35) LAY = { spread: 0.72, fov: 62, camZ: 11 };  /* square-ish */
+    else               LAY = { spread: 1.00, fov: 55, camZ: 11 };  /* landscape */
+    camera.fov = LAY.fov;
+    camera.position.set(0, 2.4, LAY.camZ);
+    camera.lookAt(new THREE.Vector3(0, 0.6, 0));
+    camera.updateProjectionMatrix();
   }
 
   /* ── Scene ── */
@@ -1210,7 +1312,7 @@ function initPortfolio(projectsData, publications) {
       var key  = String(Math.max(-2, Math.min(2, off)));
       var slot = SLOTS[key] || SLOTS['2'];
       var st   = itemStates[idx];
-      st.targetPos    = slot.pos.slice();
+      st.targetPos    = [slot.pos[0] * LAY.spread, slot.pos[1], slot.pos[2]];
       st.targetScale  = slot.scale;
       st.targetBright = slot.bright;
     });
@@ -1232,23 +1334,30 @@ function initPortfolio(projectsData, publications) {
 
   /* ── Popup ── */
   function defaultPopupPos() {
-    var pw = Math.min(340, W() - 24);
-    return { left: W() - pw - 22, top: Math.max(70, H()*0.16) };
+    var pw = popup.offsetWidth || Math.min(340, W() - 24);
+    var ph = popup.offsetHeight || 300;
+    if (W() / H() < 0.85) {   /* portrait: sit low so the 3D stage stays visible */
+      return {
+        left: Math.max(8, (W() - pw) / 2),
+        top:  Math.max(70, Math.min(H() * 0.40, H() - ph - 96))
+      };
+    }
+    return { left: W() - pw - 22, top: Math.max(70, H() * 0.16) };
   }
   function openPopupFor(idx) {
     var cat = categories[idx];
     popupTitle.textContent = cat.title;
     popupBody.innerHTML = buildPopupHTML(cat, publications);
+    popup.style.display = '';
+    popup.classList.remove('open');
+    void popup.offsetWidth;
+    popup.classList.add('open');
     if (!popupUserMoved) {
       var p = defaultPopupPos();
       popup.style.left = p.left + 'px';
       popup.style.top  = p.top + 'px';
       popup.style.right = 'auto';
     }
-    popup.style.display = '';
-    popup.classList.remove('open');
-    void popup.offsetWidth;
-    popup.classList.add('open');
   }
   function closePopup() {
     popup.classList.remove('open');
@@ -1348,7 +1457,7 @@ function initPortfolio(projectsData, publications) {
   };
   function sideForX(x)   { return x < W() / 2 ? 'left' : 'right'; }
   function fighterOf(s)  { return s === 'left' ? fight.p1 : fight.p2; }
-  function boundsOf(s)   { return s === 'left' ? P1_BOUNDS : P2_BOUNDS; }
+  function boundsOf(s)   { return s === 'left' ? bnd(P1_BOUNDS_BASE) : bnd(P2_BOUNDS_BASE); }
   function sideByTouchId(id) {
     if (fSide.left.id === id)  return 'left';
     if (fSide.right.id === id) return 'right';
@@ -1421,8 +1530,6 @@ function initPortfolio(projectsData, publications) {
     shake: 0
   };
   var MAX_HP = 100, DMG = 12, LASER_SPEED = 0.28, SHOOT_CD = 22; /* frames */
-  var P1_BOUNDS = { minX: -8, maxX: -1.2, minY: -1.4, maxY: 3.2 };
-  var P2_BOUNDS = { minX: 1.2, maxX: 8,   minY: -1.4, maxY: 3.2 };
 
   var fightBtn      = document.getElementById('fight-btn');
   var selectBanner  = document.getElementById('fight-select-banner');
@@ -1540,9 +1647,10 @@ function initPortfolio(projectsData, publications) {
 
     categories.forEach(function(cat, idx) {
       var st = itemStates[idx];
-      if (idx === fight.p1)      { st.targetPos = [-5, 0.4, 1.5]; st.targetScale = 1.2; st.targetBright = 1; }
-      else if (idx === fight.p2) { st.targetPos = [ 5, 0.4, 1.5]; st.targetScale = 1.2; st.targetBright = 1; }
-      else                       { st.targetPos = [0, -6, -8];    st.targetScale = 0.01; st.targetBright = 0; }
+      var fx = 5 * LAY.spread;
+      if (idx === fight.p1)      { st.targetPos = [-fx, 0.4, 1.5]; st.targetScale = 1.2; st.targetBright = 1; }
+      else if (idx === fight.p2) { st.targetPos = [ fx, 0.4, 1.5]; st.targetScale = 1.2; st.targetBright = 1; }
+      else                       { st.targetPos = [0, -6, -8];     st.targetScale = 0.01; st.targetBright = 0; }
     });
 
     if (IS_TOUCH) {
@@ -1656,22 +1764,23 @@ function initPortfolio(projectsData, publications) {
   function fightStep() {
     var SPEED = 0.11;
     var st1 = itemStates[fight.p1], st2 = itemStates[fight.p2];
+    var b1 = bnd(P1_BOUNDS_BASE), b2 = bnd(P2_BOUNDS_BASE);
 
     /* P1: WASD */
     if (fight.keys['a']) st1.targetPos[0] -= SPEED;
     if (fight.keys['d']) st1.targetPos[0] += SPEED;
     if (fight.keys['w']) st1.targetPos[1] += SPEED;
     if (fight.keys['s']) st1.targetPos[1] -= SPEED;
-    st1.targetPos[0] = Math.max(P1_BOUNDS.minX, Math.min(P1_BOUNDS.maxX, st1.targetPos[0]));
-    st1.targetPos[1] = Math.max(P1_BOUNDS.minY, Math.min(P1_BOUNDS.maxY, st1.targetPos[1]));
+    st1.targetPos[0] = Math.max(b1.minX, Math.min(b1.maxX, st1.targetPos[0]));
+    st1.targetPos[1] = Math.max(b1.minY, Math.min(b1.maxY, st1.targetPos[1]));
 
     /* P2: arrows */
     if (fight.keys['ArrowLeft'])  st2.targetPos[0] -= SPEED;
     if (fight.keys['ArrowRight']) st2.targetPos[0] += SPEED;
     if (fight.keys['ArrowUp'])    st2.targetPos[1] += SPEED;
     if (fight.keys['ArrowDown'])  st2.targetPos[1] -= SPEED;
-    st2.targetPos[0] = Math.max(P2_BOUNDS.minX, Math.min(P2_BOUNDS.maxX, st2.targetPos[0]));
-    st2.targetPos[1] = Math.max(P2_BOUNDS.minY, Math.min(P2_BOUNDS.maxY, st2.targetPos[1]));
+    st2.targetPos[0] = Math.max(b2.minX, Math.min(b2.maxX, st2.targetPos[0]));
+    st2.targetPos[1] = Math.max(b2.minY, Math.min(b2.maxY, st2.targetPos[1]));
 
     if (fight.cooldown1 > 0) fight.cooldown1--;
     if (fight.cooldown2 > 0) fight.cooldown2--;
@@ -1714,7 +1823,7 @@ function initPortfolio(projectsData, publications) {
       camera.position.x = (Math.random()-0.5) * 0.15;
       camera.position.y = 2.4 + (Math.random()-0.5) * 0.15;
       fight.shake--;
-      if (fight.shake === 0) { camera.position.set(0, 2.4, 11); }
+      if (fight.shake === 0) { camera.position.set(0, 2.4, LAY.camZ); }
     }
   }
 
@@ -1766,6 +1875,7 @@ function initPortfolio(projectsData, publications) {
   }
 
   /* ── Boot ── */
+  computeLayout();
   applyCarousel();
   /* snap initial positions so nothing flies in from origin */
   itemStates.forEach(function(st) {
@@ -1781,7 +1891,9 @@ function initPortfolio(projectsData, publications) {
   }, 1200);
 
   window.addEventListener('resize', function() {
+    computeLayout();
     camera.aspect = W()/H(); camera.updateProjectionMatrix(); renderer.setSize(W(), H());
+    if (MODE === 'idle') applyCarousel();
     if (!popupUserMoved && popup.classList.contains('open')) {
       var p = defaultPopupPos();
       popup.style.left = p.left+'px'; popup.style.top = p.top+'px';
