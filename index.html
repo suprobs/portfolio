@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="description" content="SupRobs — XR researcher, engineer & builder of digital things." />
   <title>SupRobs — Portfolio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -368,8 +368,60 @@ canvas { display: block; }
   #fight-vs { font-size: 11px; }
 }
 
+/* ============================================================
+   PS1 / PSX AESTHETIC MODE
+   ============================================================ */
+#psx-btn {
+  position: absolute; bottom: 26px; right: 26px; z-index: 26;
+  font-family: 'Press Start 2P', monospace; font-size: 10px;
+  color: #66ffcc; background: rgba(0,20,28,0.82);
+  border: 1px solid #008866; padding: 12px 18px;
+  cursor: pointer; letter-spacing: 3px;
+  text-shadow: 0 0 8px rgba(80,255,200,0.5);
+  transition: all 0.15s;
+}
+#psx-btn:hover {
+  background: rgba(0,42,56,0.92); border-color: #00ccaa;
+  box-shadow: 0 0 18px rgba(0,220,180,0.35);
+  transform: translateY(-2px);
+}
+#psx-btn.active {
+  color: #ffcc66; border-color: #ffaa22;
+  background: rgba(42,26,0,0.85);
+  text-shadow: 0 0 10px rgba(255,180,60,0.7);
+  box-shadow: 0 0 16px rgba(255,170,40,0.3);
+}
+#psx-btn.hidden { display: none; }
+
+/* Grain / noise overlay (only visible in PSX mode) */
+#psx-grain {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  z-index: 12; pointer-events: none; display: none;
+  image-rendering: pixelated; mix-blend-mode: overlay; opacity: 0.55;
+}
+#app.psx #psx-grain { display: block; }
+/* saturated, crunchy PS1 render — filter the WebGL canvas only */
+#app.psx canvas:not(#psx-grain) {
+  image-rendering: pixelated;
+  filter: saturate(1.85) contrast(1.22) brightness(1.07);
+}
+#app.psx #scanlines {
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px,
+    rgba(0,0,0,0.22) 2px, rgba(0,0,0,0.22) 3px);
+}
+#app.psx #vignette {
+  background: radial-gradient(ellipse at center, transparent 46%, rgba(0,0,0,0.82) 100%);
+}
+/* pixelate + saturate the roster thumbnails / diamonds too for full retro feel */
+#app.psx .roster-slot .slot-diamond { filter: saturate(1.6) contrast(1.2); }
+#app.psx #section-banner, #app.psx #logo { text-shadow: 0 0 6px currentColor, 2px 2px 0 #000; }
+
+/* Disable native touch scrolling/zoom while a fight is active */
+#app.fight-active { touch-action: none; }
+
 /* ── Responsive ── */
 @media (max-width: 760px) {
+  #psx-btn { font-size: 8px; padding: 9px 12px; bottom: 20px; right: 14px; }
   #logo { font-size: 11px; top: 14px; left: 14px; }
   #logo small { font-size: 5px; }
   #section-banner { min-width: 150px; font-size: 8px; padding: 8px 12px; top: 16px; right: 14px; }
@@ -383,6 +435,63 @@ canvas { display: block; }
 }
 @media (prefers-reduced-motion: reduce) {
   #drag-hint { animation: none; opacity: 0.5; }
+}
+
+/* ── Landscape phones (short viewport) — the primary mobile target ── */
+@media (orientation: landscape) and (max-height: 500px) {
+  /* Riddle terminal */
+  #term-body { min-height: 0; padding: 12px 16px 16px; font-size: 9px; line-height: 1.7; }
+  #term-title { font-size: 6px; letter-spacing: 2px; }
+  .riddle-line { font-size: 8px; line-height: 1.6; }
+  .riddle-line.accent { font-size: 10px; }
+  #riddle-input { font-size: 9px; width: 150px; }
+  .input-prompt { font-size: 9px; }
+
+  /* Portfolio chrome */
+  #logo { font-size: 9px; top: 10px; left: 14px; }
+  #logo small { display: none; }
+  #section-banner { min-width: 110px; font-size: 7px; padding: 6px 10px; top: 10px; right: 12px; }
+  .nav-arrow { font-size: 16px; padding: 10px 6px; }
+  .roster-slot { width: 38px; height: 38px; }
+  .roster-slot .slot-diamond { width: 16px; height: 16px; }
+  .roster-slot .slot-name { display: none; }
+  #roster { gap: 6px; padding: 4px 8px 10px; bottom: 8px; }
+  #drag-hint { bottom: 60px; font-size: 5px; }
+
+  /* Mode buttons */
+  #fight-btn { font-size: 7px; padding: 8px 10px; bottom: 10px; left: 12px; }
+  #psx-btn { font-size: 7px; padding: 8px 10px; bottom: 10px; right: 12px; }
+
+  /* Fight HUD */
+  #fight-hud { top: 10px; padding: 0 14px; }
+  #fight-hud.on { gap: 10px; }
+  .hp-name { font-size: 5px; margin-bottom: 4px; }
+  .hp-wrap { height: 12px; }
+  #fight-vs { font-size: 10px; padding-top: 4px; }
+  #fight-msg { font-size: 18px; }
+  #fight-select-banner { top: 50px; font-size: 8px; padding: 8px 14px; }
+  #fight-controls { bottom: 8px; font-size: 5px; padding: 0 12px; }
+  #fight-esc { top: 40px; right: 12px; font-size: 5px; }
+
+  /* Popup: keep it compact and out of the play area */
+  #popup { width: min(260px, 44vw); }
+  #popup-body { font-size: 15px; max-height: 46vh; padding: 10px 12px 12px; }
+  .pdesc, .pub-title { font-size: 15px; }
+}
+
+/* Portrait phones: nudge to rotate for the best experience */
+#rotate-hint {
+  position: fixed; inset: 0; z-index: 250; display: none;
+  background: #000; color: #55aaff;
+  align-items: center; justify-content: center; flex-direction: column; gap: 18px;
+  font-family: 'Press Start 2P', monospace; text-align: center; padding: 30px;
+}
+#rotate-hint .rot-icon { font-size: 40px; animation: rotWiggle 2s ease-in-out infinite; }
+#rotate-hint .rot-txt { font-size: 10px; line-height: 2; letter-spacing: 2px; color: #66aadd; }
+#rotate-hint .rot-sub { font-size: 7px; color: #33557a; letter-spacing: 1px; }
+@keyframes rotWiggle { 0%,100% { transform: rotate(-12deg); } 50% { transform: rotate(78deg); } }
+@media (orientation: portrait) and (max-width: 760px) {
+  #rotate-hint { display: flex; }
 }
 
   </style>
@@ -418,6 +527,13 @@ canvas { display: block; }
     </div>
   </div>
 
+  <!-- ROTATE HINT (portrait phones) -->
+  <div id="rotate-hint">
+    <div class="rot-icon">&#128241;</div>
+    <div class="rot-txt">ROTATE YOUR<br>DEVICE</div>
+    <div class="rot-sub">LANDSCAPE MODE RECOMMENDED</div>
+  </div>
+
   <!-- PORTFOLIO -->
   <div id="app">
     <div id="loading">
@@ -427,6 +543,7 @@ canvas { display: block; }
     </div>
     <div id="scanlines"></div>
     <div id="vignette"></div>
+    <canvas id="psx-grain"></canvas>
     <div class="corner tl"></div><div class="corner tr"></div>
     <div class="corner bl"></div><div class="corner br"></div>
 
@@ -440,6 +557,7 @@ canvas { display: block; }
     <div id="roster"></div>
 
     <div id="fight-btn">&#9876; FIGHT</div>
+    <div id="psx-btn">&#9632; PS1 MODE</div>
     <div id="fight-select-banner"></div>
     <div id="fight-hud">
       <div class="hp-side">
@@ -948,6 +1066,7 @@ function makeGeometry(type) {
 function initPortfolio(projectsData, publications) {
   var categories = projectsData.categories || [];
   var N = categories.length;
+  var IS_TOUCH = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
   var appEl = document.getElementById('app');
   function W() { return appEl.clientWidth; }
   function H() { return appEl.clientHeight; }
@@ -981,7 +1100,8 @@ function initPortfolio(projectsData, publications) {
 
   var renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setSize(W(), H());
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  var basePixelRatio = Math.min(window.devicePixelRatio, 2);
+  renderer.setPixelRatio(basePixelRatio);
   appEl.insertBefore(renderer.domElement, appEl.firstChild);
 
   scene.add(new THREE.AmbientLight(0x112244, 1.3));
@@ -1218,6 +1338,75 @@ function initPortfolio(projectsData, publications) {
     if (Math.abs(dx) > 50) { dx < 0 ? next() : prev(); }
   }, { passive: true });
 
+  /* ── Mobile FIGHT controls ──
+     Left half drives P1, right half drives P2. Drag up/down to move
+     vertically; a double-tap on your side fires a laser. Multi-touch
+     so both players can act at the same time.                        */
+  var fSide = {
+    left:  { id: null, startY: 0, baseY: 0, moved: false, lastTap: 0 },
+    right: { id: null, startY: 0, baseY: 0, moved: false, lastTap: 0 }
+  };
+  function sideForX(x)   { return x < W() / 2 ? 'left' : 'right'; }
+  function fighterOf(s)  { return s === 'left' ? fight.p1 : fight.p2; }
+  function boundsOf(s)   { return s === 'left' ? P1_BOUNDS : P2_BOUNDS; }
+  function sideByTouchId(id) {
+    if (fSide.left.id === id)  return 'left';
+    if (fSide.right.id === id) return 'right';
+    return null;
+  }
+
+  appEl.addEventListener('touchstart', function(e) {
+    if (MODE !== 'fight') return;
+    for (var i = 0; i < e.changedTouches.length; i++) {
+      var tch = e.changedTouches[i];
+      var side = sideForX(tch.clientX);
+      if (fSide[side].id !== null) continue;      /* one finger per side */
+      var idx = fighterOf(side);
+      if (idx < 0) continue;
+      fSide[side].id = tch.identifier;
+      fSide[side].startY = tch.clientY;
+      fSide[side].baseY = itemStates[idx].targetPos[1];
+      fSide[side].moved = false;
+    }
+    e.preventDefault();
+  }, { passive: false });
+
+  appEl.addEventListener('touchmove', function(e) {
+    if (MODE !== 'fight') return;
+    for (var i = 0; i < e.changedTouches.length; i++) {
+      var tch = e.changedTouches[i];
+      var side = sideByTouchId(tch.identifier);
+      if (!side) continue;
+      var dy = fSide[side].startY - tch.clientY;  /* drag up => move up */
+      if (Math.abs(dy) > 6) fSide[side].moved = true;
+      var idx = fighterOf(side), b = boundsOf(side);
+      var ny = fSide[side].baseY + dy * 0.022;
+      itemStates[idx].targetPos[1] = Math.max(b.minY, Math.min(b.maxY, ny));
+    }
+    e.preventDefault();
+  }, { passive: false });
+
+  function fightTouchEnd(e) {
+    for (var i = 0; i < e.changedTouches.length; i++) {
+      var tch = e.changedTouches[i];
+      var side = sideByTouchId(tch.identifier);
+      if (!side) continue;
+      if (MODE === 'fight' && !fSide[side].moved) {  /* tap (no drag) */
+        var now = Date.now();
+        if (now - fSide[side].lastTap < 320) {       /* double-tap => shoot */
+          if (side === 'left'  && fight.cooldown1 <= 0) { spawnLaser(1); fight.cooldown1 = SHOOT_CD; }
+          if (side === 'right' && fight.cooldown2 <= 0) { spawnLaser(2); fight.cooldown2 = SHOOT_CD; }
+          fSide[side].lastTap = 0;
+        } else {
+          fSide[side].lastTap = now;
+        }
+      }
+      fSide[side].id = null;
+    }
+  }
+  appEl.addEventListener('touchend', fightTouchEnd, { passive: false });
+  appEl.addEventListener('touchcancel', fightTouchEnd, { passive: false });
+
 
   /* ============================================================
      FIGHT MODE  —  Tekken-style mini battle between two sections
@@ -1249,6 +1438,48 @@ function initPortfolio(projectsData, publications) {
   var navR = document.getElementById('nav-right');
   var dragHint = document.getElementById('drag-hint');
 
+  /* ============================================================
+     PS1 / PSX AESTHETIC TOGGLE
+     Low internal render resolution (pixel crunch) + saturated
+     CRT filter (CSS) + animated film grain overlay.
+     ============================================================ */
+  var psxBtn = document.getElementById('psx-btn');
+  var grainCanvas = document.getElementById('psx-grain');
+  var GRAIN_W = 200, GRAIN_H = 120, grainCtx = null, grainRAF = null, grainLast = 0;
+  var psxOn = false;
+
+  function startGrain() {
+    grainCanvas.width = GRAIN_W; grainCanvas.height = GRAIN_H;
+    grainCtx = grainCanvas.getContext('2d');
+    grainLast = 0;
+    (function loop(ts) {
+      if (!psxOn) return;
+      grainRAF = requestAnimationFrame(loop);
+      if (ts - grainLast < 55) return;          /* ~18fps flicker */
+      grainLast = ts;
+      var img = grainCtx.createImageData(GRAIN_W, GRAIN_H);
+      var d = img.data;
+      for (var i = 0; i < d.length; i += 4) {
+        var v = (Math.random() * 255) | 0;
+        d[i] = d[i + 1] = d[i + 2] = v;
+        d[i + 3] = 60 + ((Math.random() * 70) | 0);
+      }
+      grainCtx.putImageData(img, 0, 0);
+    })(0);
+  }
+  function stopGrain() { if (grainRAF) cancelAnimationFrame(grainRAF); grainRAF = null; }
+
+  function setPsx(on) {
+    psxOn = on;
+    appEl.classList.toggle('psx', on);
+    psxBtn.classList.toggle('active', on);
+    psxBtn.innerHTML = on ? '&#9632; PS1 MODE: ON' : '&#9632; PS1 MODE';
+    renderer.setPixelRatio(on ? 0.42 : basePixelRatio);
+    renderer.setSize(W(), H());
+    if (on) startGrain(); else stopGrain();
+  }
+  psxBtn.addEventListener('click', function() { setPsx(!psxOn); });
+
   function showMsg(text, color) {
     fightMsg.textContent = text;
     fightMsg.style.color = color || '#ffcc00';
@@ -1266,6 +1497,8 @@ function initPortfolio(projectsData, publications) {
     fight.p1 = -1; fight.p2 = -1;
     closePopup();
     fightBtn.classList.add('hidden');
+    psxBtn.classList.add('hidden');
+    appEl.classList.add('fight-active');
     navL.style.display = 'none'; navR.style.display = 'none';
     dragHint.style.display = 'none';
     selectBanner.className = 'p1';
@@ -1311,6 +1544,16 @@ function initPortfolio(projectsData, publications) {
       else if (idx === fight.p2) { st.targetPos = [ 5, 0.4, 1.5]; st.targetScale = 1.2; st.targetBright = 1; }
       else                       { st.targetPos = [0, -6, -8];    st.targetScale = 0.01; st.targetBright = 0; }
     });
+
+    if (IS_TOUCH) {
+      fightControls.innerHTML =
+        '<span class="fc-p1">P1: DRAG LEFT SIDE &middot; DBL-TAP = SHOOT</span>' +
+        '<span class="fc-p2">P2: DRAG RIGHT SIDE &middot; DBL-TAP = SHOOT</span>';
+    } else {
+      fightControls.innerHTML =
+        '<span class="fc-p1">P1: WASD MOVE &middot; Z SHOOT</span>' +
+        '<span class="fc-p2">P2: ARROWS MOVE &middot; ENTER SHOOT</span>';
+    }
 
     rosterEl.style.display = 'none';
     fightHud.classList.add('on');
@@ -1382,6 +1625,8 @@ function initPortfolio(projectsData, publications) {
     slots.forEach(function(s) { s.style.borderColor = ''; s.style.boxShadow = ''; });
     rosterEl.style.display = '';
     fightBtn.classList.remove('hidden');
+    psxBtn.classList.remove('hidden');
+    appEl.classList.remove('fight-active');
     navL.style.display = ''; navR.style.display = '';
     dragHint.style.display = '';
     MODE = 'idle';
